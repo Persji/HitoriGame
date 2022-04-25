@@ -1,0 +1,42 @@
+Klasa Generator:
+
+int dificulty - przechowuje poziom trudności czyli w zasadzie jak duża będzie plansza
+
+metody:
+generateFromText - generuje planszę podaną przez użytkownika
+generateRandom - generuje losową planszę zależną od wybranego poziomu trudności
+setDificulty - ustawia poziom trudności
+getDificulty - zwraca poziom trudności
+checkFile - sprawdza czy istnieje ścieżka wczytywanego pliku
+
+Klasa Board:
+
+int size - przechowuje wielkość planszy 
+userList - przechowuje aktualny stan planszy
+generatedList - przechowuje pierwsza wygenerowaną plansze
+
+metody:
+getSize - zwraca szerokość/długość kwadratu
+getUserList - zwraca aktualny stan planszy
+updateUserList - przy każdej zmianie pola będzie aktualizowana userLista
+
+Klasa Solver:
+
+correctList - poprawnie rozwiązana plansza
+Board board - akutalna plansza
+
+metody:
+checkFinalAnswer - porównuje poprawnie rozwiązaną plansze z aktulaną planszą użytkownika
+calculateCorrectAnswer - oblicza algorytmem jak powinna wyglądać correctList
+checkNextArea - sprawdza czy wokół czarnego pola są inne czarne pola i zwraca True jeżeli są i False jeżeli nie ma.
+showBlackHint - wywoływana w przypadku gdy obok czarnego pola znajdują się inne czarne pola i wyświetla podpowiedź na ekran.
+
+Klasa Saver:
+
+Board board: aktualna plansza
+
+metody:
+saveBoard - zapisuje aktualną planszę tak by można było później kontynuować rozgrywkę
+exportBoard - zapisuje aktualną planszę w formie gotowej do wydruku
+checkDirectory - sprawdza czy istnieje dana ścieżka
+
