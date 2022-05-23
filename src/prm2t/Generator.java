@@ -3,8 +3,8 @@ package prm2t;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 //Klasa Generator:
 //
@@ -19,7 +19,7 @@ import java.util.Map;
 public class Generator {
 
     private int dificulty = 0;
-    private HashMap<Coordinates,Values> board = new HashMap<>();
+    private final ArrayList<Values> board = new ArrayList<Values>();
 
     public Generator(int dificulty) {
         this.dificulty = dificulty;
@@ -27,7 +27,7 @@ public class Generator {
 
     public void generateFromText(String path) throws IOException {
 
-        int j = -1;
+        int j = 0;
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String line = bufferedReader.readLine();
@@ -37,45 +37,72 @@ public class Generator {
                     String[] value = words[i].split("-");
                     int correctValue = Integer.parseInt(value[0]);
                     int correctColor = Integer.parseInt(value[1]);
-                    if(i%5 == 0) {
-                        ++j;
+                    if(correctColor == 0) {
+                        board.add(j, new Values(correctValue,false));
                     }
-                    board.put(new Coordinates(j,i%5), new Values(correctValue,correctColor));
+                    else{
+                        board.add(j, new Values(correctValue,true));
+                    }
+                    ++j;
                 }
                 line = bufferedReader.readLine();
             }
+
         } catch(Exception e) {
             System.out.println("Nie odnaleziono wskazanego pliku");
         }
 
     }
 
-    public int getValueFromBoard(int row, int col) {
+    public int getValueFromBoard(int coordinates) {
 
-        Values v = board.get(new Coordinates(row,col));
+        Values v = board.get(coordinates);
         if(v != null) {
-            return v.getValue();
+            return v.getCoordinates();
         } else {
             System.out.println("Podane koordynaty wykraczają poza plansze");
             return -1;
         }
    }
-    public int getColorFromBoard(int row, int col) {
 
-        Values v = board.get(new Coordinates(row,col));
+    public boolean getColorFromBoard(int coordinates) {
+
+        Values v = board.get(coordinates);
         if(v != null) {
             return v.getColor();
         } else {
             System.out.println("Podane koordynaty wykraczają poza plansze");
-            return -1;
+            return false;
         }
     }
 
-//    public int xxx(int row, int col) {
-//        Coordinates key = new Coordinates(row,col);
-//        Values value = board.get(key);
-//        System.out.println(value.getValue());
-//        return value.getColor();
-//    }
+    public void generateRandom(int dificulty) {
+        if(dificulty==0) {
+            int boardSize = 25;
+            int blackSize = getRandomNumber(7,8);
+            ArrayList<Integer> blackCoordinates = new ArrayList<>();
+            for(int i=0; i<blackSize; ++i) {
+                int tempCoordinates = getRandomNumber(0,boardSize-1);
+                if(blackCoordinates.contains(tempCoordinates)){
+                    --i;
+                }
+                else{
+                    blackCoordinates.add(tempCoordinates);
+                }
+            }
+            Collections.sort(blackCoordinates);
+            System.out.println(blackCoordinates);
+        }
+        else if(dificulty==1){
+
+        }
+        else{
+
+        }
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
 
 }

@@ -36,7 +36,7 @@ public class Saver {
 
         for(int i=0; i<size;i++){ //rzędy
             for(int j=0; j<size;j++){ //kolumny
-                text += generator.getValueFromBoard(i,j) + "-" + generator.getColorFromBoard(i,j) + " "; //zamien na board.getValue i board.getColor
+                //text += generator.getValueFromBoard(i,j) + "-" + generator.getColorFromBoard(i,j) + " "; //zamien na board.getValue i board.getColor
             }
             text += "\n";
         }
