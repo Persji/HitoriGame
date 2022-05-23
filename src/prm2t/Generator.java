@@ -44,29 +44,20 @@ public class Generator {
                 }
                 line = bufferedReader.readLine();
             }
+        } catch(Exception e) {
+            System.out.println("Nie odnaleziono wskazanego pliku");
         }
 
     }
 
     public int getValueFromBoard(int row, int col) {
-        for (Map.Entry<Coordinates, Values> entry : board.entrySet()) {
-            Coordinates key = entry.getKey();
-            Values value = entry.getValue();
-            if(key.getCols() == col && key.getRows() == row) {
-                return value.getValue();
-            }
-        }
-        return 0;
+
+        Values v = board.get(new Coordinates(row,col));
+        return v.getValue();
    }
     public int getColorFromBoard(int row, int col) {
-        for (Map.Entry<Coordinates, Values> entry : board.entrySet()) {
-            Coordinates key = entry.getKey();
-            Values value = entry.getValue();
-            if(key.getCols() == col && key.getRows() == row) {
-                return value.getColor();
-            }
-        }
-        return 0;
+        Values v = board.get(new Coordinates(row,col));
+        return v.getColor();
     }
 
 //    public int xxx(int row, int col) {
