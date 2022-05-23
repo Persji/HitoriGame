@@ -9,6 +9,33 @@ public class Coordinates {
         this.cols = cols;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Coordinates coord = (Coordinates) o;
+
+        if (rows != coord.rows) {
+            return false;
+        }
+        if (cols != coord.cols) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return  31 * rows + cols;
+    }
+
     public int getRows() {
         return rows;
     }
