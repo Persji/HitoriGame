@@ -20,6 +20,7 @@ public class GUI implements ActionListener {
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
+    private JLabel board;
 
     public GUI(){
 
@@ -31,6 +32,12 @@ public class GUI implements ActionListener {
         title.setHorizontalTextPosition(JLabel.CENTER);
         title.setVerticalTextPosition(JLabel.CENTER);
         title.setFont(new Font("Monospaced",Font.PLAIN,50));
+
+        board = new JLabel();
+        board.setText("Miejsce na plansze");
+        board.setHorizontalTextPosition(JLabel.CENTER);
+        board.setVerticalTextPosition(JLabel.CENTER);
+        board.setFont(new Font("Monospaced",Font.PLAIN,50));
 
         north_panel = new JPanel();
         west_panel = new JPanel();
@@ -55,7 +62,7 @@ public class GUI implements ActionListener {
         north_panel.setPreferredSize(new Dimension(100,100));
 
         north_panel.add(title);
-
+        central_panel.add(board);
 
         easy = new JRadioButton("Easy");
         easy.addActionListener(this);
