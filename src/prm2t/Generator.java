@@ -53,11 +53,22 @@ public class Generator {
     public int getValueFromBoard(int row, int col) {
 
         Values v = board.get(new Coordinates(row,col));
-        return v.getValue();
+        if(v != null) {
+            return v.getValue();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return -1;
+        }
    }
     public int getColorFromBoard(int row, int col) {
+
         Values v = board.get(new Coordinates(row,col));
-        return v.getColor();
+        if(v != null) {
+            return v.getColor();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return -1;
+        }
     }
 
 //    public int xxx(int row, int col) {
