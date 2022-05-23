@@ -9,10 +9,10 @@ import java.io.File;
 public class GUI implements ActionListener {
 
     private JFrame frame;
-    private JLabel safe_label;
-    private JLabel load_label;
-    private JLabel solve_label;
-    private JPanel panel;
+    private JLabel title;
+    private JPanel north_panel;
+    private JPanel west_panel;
+    private JPanel central_panel;
     private JButton safe_button;
     private JButton load_button;
     private JButton solve_button;
@@ -23,23 +23,51 @@ public class GUI implements ActionListener {
 
     public GUI(){
 
+        //frame - okno GUI
         // panel - główny 'widok' GUI
 
-        panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(300,300,100,300));
-        panel.setLayout(new GridLayout(0, 1));
+        title = new JLabel();
+        title.setText("HITORI");
+        title.setHorizontalTextPosition(JLabel.CENTER);
+        title.setVerticalTextPosition(JLabel.CENTER);
+        title.setFont(new Font("Monospaced",Font.PLAIN,50));
+
+        north_panel = new JPanel();
+        west_panel = new JPanel();
+        central_panel = new JPanel();
+
+        frame = new JFrame();
+        frame.setSize(500,500);
+        frame.setLayout(new BorderLayout(5,5));
+        frame.add(central_panel,BorderLayout.CENTER);
+        frame.add(west_panel,BorderLayout.WEST);
+        frame.add(north_panel, BorderLayout.NORTH);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Hitori Game");
+        frame.pack();
+        frame.setVisible(true);
+
+        north_panel.setBackground(Color.GRAY);
+        north_panel.setPreferredSize(new Dimension(100, 100));
+        west_panel.setBackground(Color.darkGray);
+        west_panel.setPreferredSize(new Dimension(100,100));
+        central_panel.setBackground(Color.lightGray);
+        north_panel.setPreferredSize(new Dimension(100,100));
+
+        north_panel.add(title);
+
 
         easy = new JRadioButton("Easy");
         easy.addActionListener(this);
-        panel.add(easy);
+        west_panel.add(easy);
 
         normal = new JRadioButton("Normal");
         normal.addActionListener(this);
-        panel.add(normal);
+        west_panel.add(normal);
 
         hard = new JRadioButton("Hard");
         hard.addActionListener(this);
-        panel.add(hard);
+        west_panel.add(hard);
 
         difficulty = new ButtonGroup();
         difficulty.add(easy);
@@ -50,34 +78,19 @@ public class GUI implements ActionListener {
 
         safe_button = new JButton("Safe");
         safe_button.addActionListener(this);
-        safe_label = new JLabel("x1");
-        panel.add(safe_button);
-        panel.add(safe_label);
+        west_panel.add(safe_button);
 
         //load_button - przycisk wczytania planszy
 
         load_button = new JButton("Load");
         load_button.addActionListener(this);
-        load_label = new JLabel("x2");
-        panel.add(load_button);
-        panel.add(load_label);
+        west_panel.add(load_button);
 
         //solve_button - przycisk spr rozwiązanie planszy
 
         solve_button = new JButton("Solve");
         solve_button.addActionListener(this);
-        solve_label = new JLabel("x3");
-        panel.add(solve_button);
-        panel.add(solve_label);
-
-        //frame - okno GUI
-
-        frame = new JFrame();
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Hitori Game");
-        frame.pack();
-        frame.setVisible(true);
+        west_panel.add(solve_button);
 
     }
     public static void test(String[] args){
