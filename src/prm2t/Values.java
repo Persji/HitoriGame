@@ -2,14 +2,14 @@ package prm2t;
 
 public class Values {
     private final int value;
-    private final boolean color;
+    private boolean color;
 
     public Values(int value, boolean color) {
         this.value = value;
         this.color = color;
     }
 
-    public int getCoordinates() {
+    public int getValue() {
         return value;
     }
 

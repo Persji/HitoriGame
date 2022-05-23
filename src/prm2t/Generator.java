@@ -58,7 +58,7 @@ public class Generator {
 
         Values v = board.get(coordinates);
         if(v != null) {
-            return v.getCoordinates();
+            return v.getValue();
         } else {
             System.out.println("Podane koordynaty wykraczają poza plansze");
             return -1;
