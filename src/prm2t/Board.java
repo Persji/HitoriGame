@@ -1,23 +1,27 @@
 package prm2t;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
     private final int size;
-    private HashMap<Coordinates,Values> userList = new HashMap<>();
-    private HashMap<Coordinates,Values> generatedList = new HashMap<>();
+    private  List<Integer> userBoard = new ArrayList<Integer>();
+    private List<Integer> generatedList = new ArrayList<Integer>();
 
-    public Board(HashMap<Coordinates,Values> genList) {
+    public Board(List<Integer> genList) {
         this.generatedList = genList;
         this.size = generatedList.size();
-        this.userList = genList;
+        this.userBoard = genList;
     }
 
     public int getSize() {
         return size;
     }
-    public HashMap<Coordinates,Values> getUserList() {
-        return generatedList;
+    public List<Integer> getUserBoard() {
+        return userBoard;
     }
 
+    public void updateBoard(List<Integer> updatedBoard) {
+        userBoard = updatedBoard;
+    }
 }
