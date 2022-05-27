@@ -44,13 +44,13 @@ public class GUI implements ActionListener {
         central_panel = new JPanel();
 
         frame = new JFrame();
+        frame.setPreferredSize(new Dimension(1000, 800));
         frame.setLayout(new BorderLayout(5,5));
         frame.add(central_panel,BorderLayout.CENTER);
         frame.add(west_panel,BorderLayout.WEST);
         frame.add(north_panel, BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Hitori Game");
-        frame.setPreferredSize(new Dimension(1000, 800));
         frame.pack();
         frame.setVisible(true);
 
