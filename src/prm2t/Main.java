@@ -8,5 +8,11 @@ public class Main {
         generator.generateFromText("resources\\plansza.txt");
         generator.generateRandom(0);
 
+        Board board = new Board(generator.getBoard());
+
+        Saver saver = new Saver(board,generator);
+        saver.saveBoard("resources/savedBoard.txt");
+
+        GUI gui = new GUI();
     }
 }

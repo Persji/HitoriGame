@@ -14,6 +14,9 @@ public class Generator {
     public Generator(int dificulty) {
         this.dificulty = dificulty;
     }
+
+    public List<Values> getBoard(){return board;}
+
     /* funkcja generujaca plansze z pliku txt */
     public void generateFromText(String path) throws IOException {
 
