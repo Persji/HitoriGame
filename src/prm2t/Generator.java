@@ -92,7 +92,7 @@ public class Generator {
             do {
                 blackCoordinates.clear();
                 whiteCoordinates.clear();
-                for (int i = 0; i < blackSize; ++i) {
+                for (int i=0; i < blackSize; ++i) {
                     int tempCoordinates = getRandomNumber(0, boardSize - 1);
                     if (blackCoordinates.contains(tempCoordinates)) {
                         --i;
@@ -100,7 +100,7 @@ public class Generator {
                         blackCoordinates.add(tempCoordinates);
                     }
                 }
-                for (int i = 0; i < boardSize; ++i) {
+                for (int i=0; i < boardSize; ++i) {
                     if (!blackCoordinates.contains(i)) {
                         whiteCoordinates.add(i);
                     }
@@ -111,18 +111,37 @@ public class Generator {
                 result1 = checkNextBlack(boardSize, blackCoordinates);
                 result2 = checkNextWhite(whiteCoordinates);
             } while(!result1 || !result2);
-//            System.out.println(whiteCoordinates);
-//            System.out.println(blackCoordinates);
-
-            for(int i=0; i<whiteCoordinates.size(); ++i) {
-                int width = (int)(Math.sqrt(boardSize));
-                int randomNumber = getRandomNumber(1,width);
-                //board.add(whiteCoordinates.get(i),new Values(randomNumber,false));
-                /* w tym miejscu pozostaje do zrobienia funkcja dodająca losowe cyfry w białe miejsca, bez powtorzen
-                * nastepnie w czarne miejsca z wystepujacymi juz cyframi w rzedzie lub wierszu  */
+            System.out.println(whiteCoordinates);
+            System.out.println(blackCoordinates);
+            //checkIfColValueExist(whiteCoordinates,boardSize);
+            for(int i=0; i<boardSize; ++i) {
+                if (whiteCoordinates.contains(i)) {
+                    board.add(i, new Values(-1, false));
+                }
+                else {
+                    board.add(i, new Values(-1,true));
+                }
             }
+
         }
 
+    private boolean checkIfRowValueExist(ArrayList<Integer> whiteCoordinates, int coordinates){
+        for(int k=0; k<whiteCoordinates.size(); ++k) {
+            if(whiteCoordinates.get(coordinates)%5 == whiteCoordinates.get(k)%5 && (getValueFromBoard(coordinates) == getValueFromBoard(k))){
+                return false;
+            }
+        }
+        return true;
+    }
+    /* funkcja zwraca true jezeli nie wystąpiła dana liczba w kolumnie */
+    private boolean checkIfColValueExist(ArrayList<Integer> whiteCoordinates, int coordinates){
+        for(int k=0; k<whiteCoordinates.size(); ++k) {
+            if((whiteCoordinates.get(coordinates)%5 == whiteCoordinates.get(k)%5) && ((getValueFromBoard(coordinates) == getValueFromBoard(k)) || (getValueFromBoard(coordinates) != -1))){
+                return false;
+            }
+        }
+        return true;
+    }
     /* jeżeli true, plansza poprawna */
     private boolean checkNextBlack(int boardsize, ArrayList<Integer> blackCoordinates) {
         for(int i=0; i< blackCoordinates.size(); ++i) {;
@@ -172,7 +191,7 @@ public class Generator {
         ArrayList<Integer> checkedWhitePixels = new ArrayList<>();
         int seed = whiteCoordinates.get(0);
         checkedWhitePixels.add(seed);
-        for(int i = 0; i<checkedWhitePixels.size(); ++i) {
+        for(int i=0; i<checkedWhitePixels.size(); ++i) {
             if(whiteCoordinates.contains(returnNext(seed))) {
                 if(!checkedWhitePixels.contains(returnNext(seed))) {
                     checkedWhitePixels.add(returnNext(seed));

@@ -13,6 +13,6 @@ public class Main {
         Saver saver = new Saver(board,generator);
         saver.saveBoard("resources/savedBoard.txt");
 
-        GUI gui = new GUI();
+       // GUI gui = new GUI();
     }
 }
