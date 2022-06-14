@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Generator generator = new Generator(0);
+        Generator generator = new Generator(2);
         //generator.generateFromText("resources\\plansza.txt");
-        generator.generateRandom(0);
+        generator.generateRandom(2);
 
         Board board = new Board(generator.getBoard());
 
