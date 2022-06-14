@@ -46,7 +46,6 @@ public class Generator {
         }
 
     }
-    /* pomocnicze gettery, możliwe że będą w przyszłości usunięte */
     public int getValueFromBoard(int coordinates) {
 
         Values v = board.get(coordinates);
@@ -78,29 +77,30 @@ public class Generator {
         }
         if(dificulty==1) {
             boardSize = 36;
-            blackSize = getRandomNumber(7, 7);
+            blackSize = getRandomNumber(11, 11);
         }
         if(dificulty==2) {
             boardSize = 49;
-            blackSize = getRandomNumber(7, 7);
+            blackSize = getRandomNumber(14, 14);
         }
-            ArrayList<Integer> blackCoordinates = new ArrayList<>();
-            ArrayList<Integer> whiteCoordinates = new ArrayList<>();
-            boolean result1 = false;
-            boolean result2 = false;
 
+        int boardWidth = (int)Math.sqrt(boardSize);
+        ArrayList<Integer> blackCoordinates = new ArrayList<>();
+        ArrayList<Integer> whiteCoordinates = new ArrayList<>();
+        boolean result1 = false;
+        boolean result2 = false;
             do {
                 blackCoordinates.clear();
                 whiteCoordinates.clear();
-                for (int i=0; i < blackSize; ++i) {
-                    int tempCoordinates = getRandomNumber(0, boardSize - 1);
+                for (int i=0; i<blackSize; ++i) {
+                    int tempCoordinates = getRandomNumber(0, boardSize-1);
                     if (blackCoordinates.contains(tempCoordinates)) {
                         --i;
                     } else {
                         blackCoordinates.add(tempCoordinates);
                     }
                 }
-                for (int i=0; i < boardSize; ++i) {
+                for (int i=0; i<boardSize; ++i) {
                     if (!blackCoordinates.contains(i)) {
                         whiteCoordinates.add(i);
                     }
@@ -108,12 +108,13 @@ public class Generator {
                 }
                 Collections.sort(blackCoordinates);
                 Collections.sort(whiteCoordinates);
-                result1 = checkNextBlack(boardSize, blackCoordinates);
-                result2 = checkNextWhite(whiteCoordinates);
+                result1 = checkNextBlack(boardWidth, blackCoordinates);
+                result2 = checkNextWhite(whiteCoordinates, boardWidth);
             } while(!result1 || !result2);
-            System.out.println(whiteCoordinates);
-            System.out.println(blackCoordinates);
-            //checkIfColValueExist(whiteCoordinates,boardSize);
+        //System.out.println(blackCoordinates);
+        //System.out.println(whiteCoordinates);
+
+            /* wpisywanie czarnych i bialych pol do boarda */
             for(int i=0; i<boardSize; ++i) {
                 if (whiteCoordinates.contains(i)) {
                     board.add(i, new Values(-1, false));
@@ -123,20 +124,88 @@ public class Generator {
                 }
             }
 
+            /* wpisywanie liczb do bialych pol */
+            for(int i=0; i<boardSize; ++i){
+
+                if(!getColorFromBoard(i)) {
+                    int random = getRandomNumber(1,boardWidth);
+                    board.set(i,new Values(random, false));
+                }
+                if(checkIfColValueExist(i, boardWidth) && !getColorFromBoard(i) && checkIfRowValueExist(i, boardWidth)){
+                    //System.out.println(i+ " " + getValueFromBoard(i));
+                }
+                else if(getColorFromBoard(i)){
+                    board.set(i,new Values(-1, true));
+                }
+                else {
+                    //for(int j=0; j<boardSize; ++j) {
+                       // System.out.println(i+ " " + getValueFromBoard(j));
+                    //}
+                    //System.out.println(i+ " " + getValueFromBoard(i));
+                    int random1 = getRandomNumber(1,boardWidth);
+                    //System.out.println(i+ " " +random1 + " ");
+                    board.set(i,new Values(random1, false));
+                    --i;
+                }
+            }
+            /* wpisywanie liczb do czarnych pol */
+            for(int i=0; i<boardSize; ++i) {
+                if(getValueFromBoard(i) == -1) {
+                    int cords = getRandomNumber(0,boardSize-1);
+                    //System.out.println(cords);
+                    if(cords%boardWidth == i%boardWidth && !getColorFromBoard(cords)) {
+                        board.set(i,new Values(getValueFromBoard(cords),true));
+                    }
+                    else {
+                        --i;
+                    }
+                }
+            }
+
         }
 
-    private boolean checkIfRowValueExist(ArrayList<Integer> whiteCoordinates, int coordinates){
-        for(int k=0; k<whiteCoordinates.size(); ++k) {
-            if(whiteCoordinates.get(coordinates)%5 == whiteCoordinates.get(k)%5 && (getValueFromBoard(coordinates) == getValueFromBoard(k))){
-                return false;
+    /* funkcja zwraca true jezeli nie wystąpiła dana liczba w rzedzie */
+    private boolean checkIfRowValueExist(int coordinates, int boardWidth){
+        if(coordinates%boardWidth == 0) {
+            for(int i=1; i<boardWidth; ++i) {
+                if(getValueFromBoard(coordinates) == getValueFromBoard(coordinates+i) && getValueFromBoard(coordinates+i) != -1) {
+                    //System.out.println("blad lewo" + " " + getValueFromBoard(coordinates));
+                    return false;
+                }
+            }
+        }
+        else if(coordinates%boardWidth == boardWidth-1) {
+            for(int i=1; i<boardWidth; ++i) {
+                if(getValueFromBoard(coordinates) == getValueFromBoard(coordinates-i) && getValueFromBoard(coordinates-i) != -1) {
+                    //System.out.println("blad prawo" + " " + getValueFromBoard(coordinates));
+                    return false;
+                }
+            }
+        }
+        else {
+            int left = coordinates%boardWidth;
+            int right = boardWidth - left - 1;
+            for(int i=1; i<=left; ++i) {
+                if(getValueFromBoard(coordinates) == getValueFromBoard(coordinates-i) && getValueFromBoard(coordinates-i) != -1) {
+                    //System.out.println("blad w lewo srodek" + " " + getValueFromBoard(coordinates));
+                    return false;
+                }
+            }
+            for(int i=1; i<=right; ++i) {
+                if(getValueFromBoard(coordinates) == getValueFromBoard(coordinates+i) && getValueFromBoard(coordinates+i) != -1) {
+                    //System.out.println("blad w prawo srodek" + " " + getValueFromBoard(coordinates));
+                    return false;
+                }
             }
         }
         return true;
     }
     /* funkcja zwraca true jezeli nie wystąpiła dana liczba w kolumnie */
-    private boolean checkIfColValueExist(ArrayList<Integer> whiteCoordinates, int coordinates){
-        for(int k=0; k<whiteCoordinates.size(); ++k) {
-            if((whiteCoordinates.get(coordinates)%5 == whiteCoordinates.get(k)%5) && ((getValueFromBoard(coordinates) == getValueFromBoard(k)) || (getValueFromBoard(coordinates) != -1))){
+    private boolean checkIfColValueExist(int coordinates, int boardWidth){
+        int mod = coordinates%boardWidth;
+        for(int i=0; i<board.size(); ++i) {
+            if(mod == i%boardWidth && getValueFromBoard(coordinates) == getValueFromBoard(i) && getValueFromBoard(coordinates) != -1 && i!=coordinates) {
+                //System.out.println("blad kol" + " " + getValueFromBoard(coordinates));
                 return false;
             }
         }
@@ -152,8 +221,8 @@ public class Generator {
         return true;
     }
     /* jeżeli true, plansza poprawna */
-    private boolean isThereBlackArea(int boardsize,int coordinates,ArrayList<Integer> blackCoordinates) {
-        int pixel = returnTop(coordinates);
+    private boolean isThereBlackArea(int boardWidth,int coordinates,ArrayList<Integer> blackCoordinates) {
+        int pixel = returnTop(coordinates, boardWidth);
         if(pixel == -1) {
             return true;
         }
@@ -161,7 +230,7 @@ public class Generator {
             return false;
         }
 
-        pixel = returnBottom(coordinates);
+        pixel = returnBottom(coordinates, boardWidth);
         if(pixel == -1) {
             return true;
         }
@@ -169,7 +238,7 @@ public class Generator {
             return false;
         }
 
-        pixel = returnNext(coordinates);
+        pixel = returnNext(coordinates, boardWidth);
         if(pixel == -1) {
             return true;
         }
@@ -177,7 +246,7 @@ public class Generator {
             return false;
         }
 
-        pixel = returnPrevious(coordinates);
+        pixel = returnPrevious(coordinates, boardWidth);
         if(pixel == -1) {
             return true;
         }
@@ -187,29 +256,29 @@ public class Generator {
         return true;
     }
     /* jeżeli true, plansza poprawna */
-    private boolean checkNextWhite(ArrayList<Integer> whiteCoordinates) {
+    private boolean checkNextWhite(ArrayList<Integer> whiteCoordinates, int boardWidth) {
         ArrayList<Integer> checkedWhitePixels = new ArrayList<>();
         int seed = whiteCoordinates.get(0);
         checkedWhitePixels.add(seed);
         for(int i=0; i<checkedWhitePixels.size(); ++i) {
-            if(whiteCoordinates.contains(returnNext(seed))) {
-                if(!checkedWhitePixels.contains(returnNext(seed))) {
-                    checkedWhitePixels.add(returnNext(seed));
+            if(whiteCoordinates.contains(returnNext(seed, boardWidth))) {
+                if(!checkedWhitePixels.contains(returnNext(seed, boardWidth))) {
+                    checkedWhitePixels.add(returnNext(seed, boardWidth));
                 }
             }
-            if(whiteCoordinates.contains(returnPrevious(seed))) {
-                if(!checkedWhitePixels.contains(returnPrevious(seed))) {
-                    checkedWhitePixels.add(returnPrevious(seed));
+            if(whiteCoordinates.contains(returnPrevious(seed, boardWidth))) {
+                if(!checkedWhitePixels.contains(returnPrevious(seed, boardWidth))) {
+                    checkedWhitePixels.add(returnPrevious(seed, boardWidth));
                 }
             }
-            if(whiteCoordinates.contains(returnTop(seed))) {
-                if(!checkedWhitePixels.contains(returnTop(seed))) {
-                    checkedWhitePixels.add(returnTop(seed));
+            if(whiteCoordinates.contains(returnTop(seed, boardWidth))) {
+                if(!checkedWhitePixels.contains(returnTop(seed, boardWidth))) {
+                    checkedWhitePixels.add(returnTop(seed, boardWidth));
                 }
             }
-            if(whiteCoordinates.contains(returnBottom(seed))) {
-                if(!checkedWhitePixels.contains(returnBottom(seed))) {
-                    checkedWhitePixels.add(returnBottom(seed));
+            if(whiteCoordinates.contains(returnBottom(seed, boardWidth))) {
+                if(!checkedWhitePixels.contains(returnBottom(seed, boardWidth))) {
+                    checkedWhitePixels.add(returnBottom(seed, boardWidth));
                 }
             }
             if(i+1<checkedWhitePixels.size()) {
@@ -226,23 +295,23 @@ public class Generator {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int returnTop(int coordinates) {
-        return coordinates+5;
+    private int returnTop(int coordinates, int boardWidth) {
+        return coordinates+boardWidth;
     }
 
-    private int returnBottom(int coordinates) {
-        return coordinates-5;
+    private int returnBottom(int coordinates, int boardWidth) {
+        return coordinates-boardWidth;
     }
 
-    private int returnPrevious(int coordinates) {
-        if(coordinates%5 == 0) {
+    private int returnPrevious(int coordinates, int boardWidth) {
+        if(coordinates%boardWidth == 0) {
             return -1;
         }
         return coordinates-1;
     }
 
-    private int returnNext(int coordinates) {
-        if((coordinates+1)%5 == 0) {
+    private int returnNext(int coordinates, int boardWidth) {
+        if((coordinates+1)%boardWidth == 0) {
             return -1;
         }
         return coordinates+1;
