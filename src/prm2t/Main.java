@@ -1,18 +1,30 @@
 package prm2t;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class Main {
+public class Main implements ActionListener {
     public static void main(String[] args) throws IOException {
-        Generator generator = new Generator(0);
-        //generator.generateFromText("resources\\plansza.txt");
-        generator.generateRandom(0);
+        GUI gui = new GUI();
+        while(true) {
+            if(gui.isRdy()) {
+                Generator generator = new Generator(gui.getDiff());
+                //generator.generateFromText("resources\\plansza.txt");
+                generator.generateRandom(gui.getDiff());
 
-        Board board = new Board(generator.getBoard());
+                Board board = new Board(generator.getBoard());
 
-        Saver saver = new Saver(board,generator);
-        saver.saveBoard("resources/savedBoard.txt");
+                Saver saver = new Saver(board, generator);
+                saver.saveBoard("resources/savedBoard.txt");
+            }
+        }
 
-       GUI gui = new GUI();
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
 }

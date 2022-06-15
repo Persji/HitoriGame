@@ -16,11 +16,38 @@ public class GUI implements ActionListener {
     private JButton save_button;
     private JButton load_button;
     private JButton solve_button;
+
+    private JButton generate_button;
     private JRadioButton easy;
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
     private JLabel board;
+
+    private Dificulty diff = Dificulty.NONE;
+
+    private boolean rdy=false;
+
+    public boolean isRdy() {
+        return rdy;
+    }
+
+    public int getDiff() {
+        return diff.getDiff();
+    }
+    private enum Dificulty {
+        NONE(-1),EASY(0),NORMAL(1),HARD(2);
+
+        private int diff;
+        Dificulty(int diff) {
+            this.diff = diff;
+        }
+        public int getDiff(){
+            return this.diff;
+        }
+    }
+
+
 
     public GUI(){
 
@@ -99,6 +126,10 @@ public class GUI implements ActionListener {
         solve_button.addActionListener(this);
         west_panel.add(solve_button);
 
+        generate_button = new JButton("Generate");
+        generate_button.addActionListener(this);
+        west_panel.add(generate_button);
+
         frame.setVisible(true);
     }
     public static void test(String[] args){
@@ -110,12 +141,15 @@ public class GUI implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==easy){
             System.out.println("Easy");
+            diff = Dificulty.EASY;
         }
         else if(e.getSource()==normal){
             System.out.println("Normal");
+            diff = Dificulty.NORMAL;
         }
         else if(e.getSource()==hard){
             System.out.println("Hard");
+            diff = Dificulty.HARD;
         }
         if(e.getSource()==load_button){
             JFileChooser fileChooser = new JFileChooser();
@@ -136,6 +170,11 @@ public class GUI implements ActionListener {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 System.out.println(file);
             }
+        }
+        if(e.getSource()==generate_button && getDiff() != -1){
+            this.rdy = true;
+        } else if(e.getSource()==generate_button && getDiff() == -1) {
+            System.out.println("Wybierz trudność");
         }
 
     }
