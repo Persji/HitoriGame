@@ -13,7 +13,7 @@ public class GUI implements ActionListener {
     private JPanel north_panel;
     private JPanel west_panel;
     private JPanel central_panel;
-    private JButton safe_button;
+    private JButton save_button;
     private JButton load_button;
     private JButton solve_button;
     private JRadioButton easy;
@@ -52,7 +52,7 @@ public class GUI implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Hitori Game");
         frame.pack();
-        frame.setVisible(true);
+
 
         north_panel.setBackground(Color.GRAY);
         north_panel.setPreferredSize(new Dimension(100, 100));
@@ -83,9 +83,9 @@ public class GUI implements ActionListener {
 
         //safe_button - przycisk do zapisu gry
 
-        safe_button = new JButton("Safe");
-        safe_button.addActionListener(this);
-        west_panel.add(safe_button);
+        save_button = new JButton("Save");
+        save_button.addActionListener(this);
+        west_panel.add(save_button);
 
         //load_button - przycisk wczytania planszy
 
@@ -99,6 +99,7 @@ public class GUI implements ActionListener {
         solve_button.addActionListener(this);
         west_panel.add(solve_button);
 
+        frame.setVisible(true);
     }
     public static void test(String[] args){
         new GUI();
@@ -108,7 +109,7 @@ public class GUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==easy){
-            System.out.println("Eeasy");
+            System.out.println("Easy");
         }
         else if(e.getSource()==normal){
             System.out.println("Normal");
@@ -126,7 +127,7 @@ public class GUI implements ActionListener {
                 System.out.println(file);
             }
         }
-        if(e.getSource()==safe_button){
+        if(e.getSource()==save_button){
             JFileChooser fileChooser = new JFileChooser();
 
             int response = fileChooser.showSaveDialog(null); //wybiera plik do zapisu gry
