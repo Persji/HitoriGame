@@ -13,14 +13,41 @@ public class GUI implements ActionListener {
     private JPanel north_panel;
     private JPanel west_panel;
     private JPanel central_panel;
-    private JButton safe_button;
+    private JButton save_button;
     private JButton load_button;
     private JButton solve_button;
+
+    private JButton generate_button;
     private JRadioButton easy;
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
     private JLabel board;
+
+    private Dificulty diff = Dificulty.NONE;
+
+    private boolean rdy=false;
+
+    public boolean isRdy() {
+        return rdy;
+    }
+
+    public int getDiff() {
+        return diff.getDiff();
+    }
+    private enum Dificulty {
+        NONE(-1),EASY(0),NORMAL(1),HARD(2);
+
+        private int diff;
+        Dificulty(int diff) {
+            this.diff = diff;
+        }
+        public int getDiff(){
+            return this.diff;
+        }
+    }
+
+
 
     public GUI(){
 
@@ -52,7 +79,7 @@ public class GUI implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Hitori Game");
         frame.pack();
-        frame.setVisible(true);
+
 
         north_panel.setBackground(Color.GRAY);
         north_panel.setPreferredSize(new Dimension(100, 100));
@@ -83,9 +110,9 @@ public class GUI implements ActionListener {
 
         //safe_button - przycisk do zapisu gry
 
-        safe_button = new JButton("Safe");
-        safe_button.addActionListener(this);
-        west_panel.add(safe_button);
+        save_button = new JButton("Save");
+        save_button.addActionListener(this);
+        west_panel.add(save_button);
 
         //load_button - przycisk wczytania planszy
 
@@ -99,6 +126,11 @@ public class GUI implements ActionListener {
         solve_button.addActionListener(this);
         west_panel.add(solve_button);
 
+        generate_button = new JButton("Generate");
+        generate_button.addActionListener(this);
+        west_panel.add(generate_button);
+
+        frame.setVisible(true);
     }
     public static void test(String[] args){
         new GUI();
@@ -108,13 +140,16 @@ public class GUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==easy){
-            System.out.println("Eeasy");
+            System.out.println("Easy");
+            diff = Dificulty.EASY;
         }
         else if(e.getSource()==normal){
             System.out.println("Normal");
+            diff = Dificulty.NORMAL;
         }
         else if(e.getSource()==hard){
             System.out.println("Hard");
+            diff = Dificulty.HARD;
         }
         if(e.getSource()==load_button){
             JFileChooser fileChooser = new JFileChooser();
@@ -126,7 +161,7 @@ public class GUI implements ActionListener {
                 System.out.println(file);
             }
         }
-        if(e.getSource()==safe_button){
+        if(e.getSource()==save_button){
             JFileChooser fileChooser = new JFileChooser();
 
             int response = fileChooser.showSaveDialog(null); //wybiera plik do zapisu gry
@@ -135,6 +170,11 @@ public class GUI implements ActionListener {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 System.out.println(file);
             }
+        }
+        if(e.getSource()==generate_button && getDiff() != -1){
+            this.rdy = true;
+        } else if(e.getSource()==generate_button && getDiff() == -1) {
+            System.out.println("Wybierz trudność");
         }
 
     }
