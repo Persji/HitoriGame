@@ -7,9 +7,9 @@ import java.io.IOException;
 public class Main implements ActionListener {
     public static void main(String[] args) throws IOException {
         GUI gui = new GUI();
-        while(true) {
-            if(gui.isRdy()) {
-                Generator generator = new Generator(gui.getDiff());
+
+
+                Generator generator = new Generator();
                 //generator.generateFromText("resources\\plansza.txt");
                 generator.generateRandom(gui.getDiff());
 
@@ -17,8 +17,8 @@ public class Main implements ActionListener {
 
                 Saver saver = new Saver(board, generator);
                 saver.saveBoard("resources/savedBoard.txt");
-            }
-        }
+
+
 
     }
 

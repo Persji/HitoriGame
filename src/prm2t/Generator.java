@@ -11,10 +11,6 @@ public class Generator {
     private int dificulty = 0;
     private final ArrayList<Values> board = new ArrayList<Values>();
 
-    public Generator(int dificulty) {
-        this.dificulty = dificulty;
-    }
-
     public List<Values> getBoard(){return board;}
 
     /* funkcja generujaca plansze z pliku txt */
