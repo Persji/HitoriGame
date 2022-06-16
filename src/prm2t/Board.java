@@ -39,4 +39,26 @@ public class Board {
         userBoard.add(xy,new Values(userBoard.get(xy).getValue(),
                 !(userBoard.get(xy).getColor())));
     }
+    public int getValueFromBoard(int coordinates) { //skopiowane z generator
+
+        Values v = userBoard.get(coordinates);
+        if(v != null) {
+            return v.getValue();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return -1;
+        }
+    }
+
+    @Override
+    public String toString(){ //zwraca same wartości planszy, jeszcze bez koloru
+        String rtn = "";
+        for (int j = 0; j <Math.sqrt(size) ; j++) {
+            for (int i = 0; i < Math.sqrt(size); i++) {
+                rtn += getValueFromBoard((int) (j*Math.sqrt(size)+ i)) + " ";
+            }
+            rtn += "\n";
+        }
+        return rtn;
+    }
 }

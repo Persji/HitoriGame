@@ -165,11 +165,12 @@ public class GUI implements ActionListener {
             if(response == JFileChooser.APPROVE_OPTION){
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
-                    al.loadBoard(file.toString());
+                    al.generator.generateFromText(file.toString());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
                 System.out.println("Wczytano "+ file);
+                update();
             }
         }
         if(e.getSource()==save_button){
@@ -187,7 +188,7 @@ public class GUI implements ActionListener {
                     file += ".txt";
                 }
                 if(!file.equals("")){
-                    al.saveBoard(file);
+                    al.saver.saveBoard(file);
                     System.out.println("Zapisano do " + file);
                 }
             }
@@ -199,4 +200,6 @@ public class GUI implements ActionListener {
         }
 
     }
+
+    public void update(){board.setText(al.board.toString());} //placeholder do łatwiejszego testowania
 }
