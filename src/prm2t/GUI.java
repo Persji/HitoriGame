@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class GUI implements ActionListener {
 
@@ -159,7 +160,12 @@ public class GUI implements ActionListener {
 
             if(response == JFileChooser.APPROVE_OPTION){
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                System.out.println(file);
+                try {
+                    al.loadBoard(file.toString());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                System.out.println("Loading "+ file);
             }
         }
         if(e.getSource()==save_button){
@@ -169,7 +175,8 @@ public class GUI implements ActionListener {
 
             if(response == JFileChooser.APPROVE_OPTION){
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                System.out.println(file);
+                al.saveBoard(file.toString());
+                System.out.println("Saved to " + file);
             }
         }
         if(e.getSource()==generate_button && getDiff() != -1){

@@ -6,6 +6,8 @@ import java.io.IOException;
 
 public class Main implements ActionListener {
     GUI gui;
+    Saver saver;
+    Generator generator;
     public void initGUI(){
         GUI gui = new GUI(this);
     }
@@ -14,18 +16,22 @@ public class Main implements ActionListener {
         return gui;
     }
 
+    public void saveBoard(String directory){saver.saveBoard(directory);}
+
+    public void loadBoard(String directory) throws IOException {generator.generateFromText(directory);}
+
     public static void  main(String[] args) throws IOException {
                 Main main = new Main();
                 main.initGUI();
                 GUI gui = main.getGui();
-                Generator generator = new Generator();
-                //generator.generateFromText("resources\\plansza.txt");
-                generator.generateRandom(gui.getDiff());
+                main.generator = new Generator();
+                //main.generator.generateFromText("resources\\plansza.txt");
+                //generator.generateRandom(gui.getDiff());
 
-                Board board = new Board(generator.getBoard());
+                Board board = new Board(main.generator.getBoard());
 
-                Saver saver = new Saver(board, generator);
-                saver.saveBoard("resources/savedBoard.txt");
+                main.saver = new Saver(board, main.generator);
+                //main.saver.saveBoard("resources/savedBoard.txt");
 
 
 
