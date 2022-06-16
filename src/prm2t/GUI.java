@@ -26,6 +26,7 @@ public class GUI implements ActionListener {
 
     private Dificulty diff = Dificulty.NONE;
 
+    private Main al;
     private boolean rdy=false;
 
     public boolean isRdy() {
@@ -49,11 +50,11 @@ public class GUI implements ActionListener {
 
 
 
-    public GUI(){
+    public GUI(Main main){
 
         //frame - okno GUI
         // panel - główny 'widok' GUI
-
+        al = main;
         title = new JLabel();
         title.setText("HITORI");
         title.setHorizontalTextPosition(JLabel.CENTER);
@@ -132,9 +133,9 @@ public class GUI implements ActionListener {
 
         frame.setVisible(true);
     }
-    public static void test(String[] args){
-        new GUI();
-    }
+    //public static void test(String[] args){
+      //  new GUI(Main main);
+    //}
 
     //akcje przycisków
     @Override

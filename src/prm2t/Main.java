@@ -5,10 +5,19 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class Main implements ActionListener {
-    public static void main(String[] args) throws IOException {
-        GUI gui = new GUI();
+    GUI gui;
+    public void initGUI(){
+        GUI gui = new GUI(this);
+    }
 
+    public GUI getGui() {
+        return gui;
+    }
 
+    public static void  main(String[] args) throws IOException {
+                Main main = new Main();
+                main.initGUI();
+                GUI gui = main.getGui();
                 Generator generator = new Generator();
                 //generator.generateFromText("resources\\plansza.txt");
                 generator.generateRandom(gui.getDiff());
