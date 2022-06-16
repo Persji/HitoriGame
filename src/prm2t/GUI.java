@@ -1,11 +1,13 @@
 package prm2t;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GUI implements ActionListener {
 
@@ -155,6 +157,8 @@ public class GUI implements ActionListener {
         }
         if(e.getSource()==load_button){
             JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+            fileChooser.setFileFilter(filter);
 
             int response = fileChooser.showOpenDialog(null); //wybiera plik do otwarcia/wczytania do gry
 
@@ -165,18 +169,27 @@ public class GUI implements ActionListener {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                System.out.println("Loading "+ file);
+                System.out.println("Wczytano "+ file);
             }
         }
         if(e.getSource()==save_button){
             JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+            fileChooser.setFileFilter(filter);
 
             int response = fileChooser.showSaveDialog(null); //wybiera plik do zapisu gry
 
             if(response == JFileChooser.APPROVE_OPTION){
-                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                al.saveBoard(file.toString());
-                System.out.println("Saved to " + file);
+                String file = new File(fileChooser.getSelectedFile().getAbsolutePath()).toString();
+                String[] fileSplit = file.split("\\.");
+
+                if(fileSplit.length == 1 || !Objects.equals(fileSplit[fileSplit.length - 1], "txt")){  //jesli plik nie ma lub ma złe rozszerzenie dodaj rozszerzenie .txt
+                    file += ".txt";
+                }
+                if(!file.equals("")){
+                    al.saveBoard(file);
+                    System.out.println("Zapisano do " + file);
+                }
             }
         }
         if(e.getSource()==generate_button && getDiff() != -1){
