@@ -24,8 +24,8 @@ public class Main implements ActionListener {
     public static void  main(String[] args) throws IOException {
                 Main main = new Main();
                 main.generator = new Generator();
-                main.generator.generateFromText("resources\\plansza.txt");
-                //generator.generateRandom(gui.getDiff());
+                //main.generator.generateFromText("resources\\plansza.txt");
+                main.generator.generateRandom(0);
 
                 main.board = new Board(main.generator.getBoard());
 
@@ -33,7 +33,7 @@ public class Main implements ActionListener {
                 main.saver.saveBoard("resources/savedBoard.txt");
 
                 main.solver = new Solver(main.board);
-                main.solver.checkIfBoardIsCorrect();
+                //main.solver.checkIfBoardIsCorrect();
 
                 main.initGUI();
                 GUI gui = main.getGui();

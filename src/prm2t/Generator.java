@@ -65,6 +65,7 @@ public class Generator {
     }
     /* funkcja generujaca losowa plansze na podstawie wbranego przez uzytkownika poziomu trudnosci */
     public void generateRandom(int dificulty) {
+        board.clear();
         int boardSize = 0;
         int blackSize = 0;
         if(dificulty==0) {
@@ -157,6 +158,7 @@ public class Generator {
                     }
                 }
             }
+            clearColors();
 
         }
 
@@ -285,6 +287,12 @@ public class Generator {
             return true;
         }
         return false;
+    }
+
+    private void clearColors(){
+        for (int i = 0; i < board.size(); i++) {
+            board.set(i,new Values(board.get(i).getValue(), false));
+        }
     }
 
     private int getRandomNumber(int min, int max) {

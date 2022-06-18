@@ -5,12 +5,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
 public class GUI implements ActionListener {
 
+    private Main al;
     private JFrame frame;
     private JLabel title;
     private JPanel north_panel;
@@ -25,11 +28,13 @@ public class GUI implements ActionListener {
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
-    private JButton[] buttons = new JButton[25];
+    private JButton[] buttons;
+    private JDialog resultWindow;
+    private JLabel resultLabel;
 
     private Dificulty diff = Dificulty.NONE;
 
-    private Main al;
+
     private boolean rdy=false;
 
     public boolean isRdy() {
@@ -70,6 +75,7 @@ public class GUI implements ActionListener {
 
         frame = new JFrame();
         frame.setPreferredSize(new Dimension(1000, 800));
+        frame.setLocation(400,100);
         frame.setLayout(new BorderLayout(5,5));
         frame.add(central_panel,BorderLayout.CENTER);
         frame.add(west_panel,BorderLayout.WEST);
@@ -128,21 +134,51 @@ public class GUI implements ActionListener {
         generate_button.addActionListener(this);
         west_panel.add(generate_button);
 
-        central_panel.setLayout(new GridLayout(5,5)); //wyswietlanie na razie tylko dla 5x5
+        //okienko wygranej
+
+        resultWindow = new JDialog(frame);
+        resultWindow.setLayout(new FlowLayout());
+        JButton okButton = new JButton("ok");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultWindow.setVisible(false);
+            }
+        });
+        resultLabel = new JLabel("");
+        resultWindow.add(resultLabel);
+        resultWindow.add(okButton);
+        resultWindow.setSize(250,100);
+        resultWindow.setLocation(775,450);
+
+        //plansza
+
+        buttons = new JButton[al.board.getSize()];
+        central_panel.setLayout(new GridLayout((int) Math.sqrt(buttons.length),(int) Math.sqrt(buttons.length)));
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton();
-            buttons[i].setBackground(Color.white);
+            buttons[i].setBackground(Color.gray);
             buttons[i].setFont(new Font("Arial", Font.PLAIN, 40));
+            buttons[i].setForeground(Color.black);
+            buttons[i].setFocusPainted(false);
             int finalI = i;
-            buttons[i].addActionListener(new ActionListener() {
+            buttons[i].addMouseListener(new MouseAdapter() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (buttons[finalI].getBackground() == Color.white) {
-                        buttons[finalI].setBackground(Color.black);
-                    } else{
-                        buttons[finalI].setBackground(Color.white);
+                public void mousePressed(MouseEvent e) {
+                    if(e.getButton() == MouseEvent.BUTTON1) {
+                        if (buttons[finalI].getBackground() == Color.white || buttons[finalI].getBackground() == Color.gray) {
+                            buttons[finalI].setBackground(Color.black);
+                        } else {
+                            buttons[finalI].setBackground(Color.gray);
+                        }
+                        al.board.changeColor(finalI);
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        if(buttons[finalI].getBackground() == Color.white) {
+                            buttons[finalI].setBackground(Color.gray);
+                        } else{
+                            buttons[finalI].setBackground(Color.white);
+                        }
                     }
-                    al.board.changeColor(finalI);
                 }
             });
             central_panel.add(buttons[i]);
@@ -152,9 +188,6 @@ public class GUI implements ActionListener {
 
         frame.setVisible(true);
     }
-    //public static void test(String[] args){
-      //  new GUI(Main main);
-    //}
 
     //akcje przycisków
     @Override
@@ -212,8 +245,19 @@ public class GUI implements ActionListener {
         }
         if(e.getSource()==generate_button && getDiff() != -1){
             this.rdy = true;
+            al.generator.generateRandom(0);
+            al.board.updateBoard(al.generator.getBoard());
+            setButtons();
         } else if(e.getSource()==generate_button && getDiff() == -1) {
             System.out.println("Wybierz trudność");
+        }
+        if(e.getSource()==solve_button){
+            if(al.solver.checkIfBoardIsCorrect()) {
+            resultLabel.setText("Rozwiązanie poprawne. Gratulacje!");
+            } else {
+                resultLabel.setText("Rozwiązanie niepoprawne. Próbuj dalej");
+            }
+            resultWindow.setVisible(true);
         }
     }
 
@@ -223,7 +267,7 @@ public class GUI implements ActionListener {
             if(al.generator.getColorFromBoard(i)) {
                 buttons[i].setBackground(Color.black);
             }else{
-                buttons[i].setBackground(Color.white);
+                buttons[i].setBackground(Color.gray);
             }
         }
     }
