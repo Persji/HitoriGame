@@ -9,6 +9,8 @@ public class Main implements ActionListener {
     Saver saver;
     Generator generator;
     Board board;
+
+    Solver solver;
     public void initGUI(){
         gui = new GUI(this);
     }
@@ -31,10 +33,10 @@ public class Main implements ActionListener {
                 main.gui.update();
 
                 main.saver = new Saver(main.board, main.generator);
-                //main.saver.saveBoard("resources/savedBoard.txt");
+                main.saver.saveBoard("resources/savedBoard.txt");
 
-
-
+                main.solver = new Solver(main.board);
+                main.solver.checkIfBoardIsCorrect();
     }
 
     @Override

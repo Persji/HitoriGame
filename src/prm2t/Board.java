@@ -50,6 +50,17 @@ public class Board {
         }
     }
 
+    public boolean getColorFromBoard(int coordinates) { //skopiowane z generatora
+
+        Values v = userBoard.get(coordinates);
+        if(v != null) {
+            return v.getColor();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return false;
+        }
+    }
+
     @Override
     public String toString(){ //zwraca same wartości planszy, jeszcze bez koloru
         String rtn = "";
