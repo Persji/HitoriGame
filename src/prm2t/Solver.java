@@ -31,10 +31,10 @@ public class Solver {
         if(checkNextBlack(board.getSize(),blackCoordinates)
         && checkNextWhite(whiteCoordinates,boardWidth)){
 
-            System.out.printf("git");
+            System.out.println("git");
             return true;
         }
-        System.out.printf("blad");
+        System.out.println("blad");
         return false;
     }
 

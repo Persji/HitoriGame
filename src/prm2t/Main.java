@@ -23,20 +23,20 @@ public class Main implements ActionListener {
 
     public static void  main(String[] args) throws IOException {
                 Main main = new Main();
-                main.initGUI();
-                GUI gui = main.getGui();
                 main.generator = new Generator();
                 main.generator.generateFromText("resources\\plansza.txt");
                 //generator.generateRandom(gui.getDiff());
 
                 main.board = new Board(main.generator.getBoard());
-                main.gui.update();
 
                 main.saver = new Saver(main.board, main.generator);
                 main.saver.saveBoard("resources/savedBoard.txt");
 
                 main.solver = new Solver(main.board);
                 main.solver.checkIfBoardIsCorrect();
+
+                main.initGUI();
+                GUI gui = main.getGui();
     }
 
     @Override

@@ -25,7 +25,7 @@ public class GUI implements ActionListener {
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
-    private JLabel board;
+    private JButton[] buttons = new JButton[25];
 
     private Dificulty diff = Dificulty.NONE;
 
@@ -64,12 +64,6 @@ public class GUI implements ActionListener {
         title.setVerticalTextPosition(JLabel.CENTER);
         title.setFont(new Font("Monospaced",Font.PLAIN,50));
 
-        board = new JLabel();
-        board.setText("Miejsce na plansze");
-        board.setHorizontalTextPosition(JLabel.CENTER);
-        board.setVerticalTextPosition(JLabel.CENTER);
-        board.setFont(new Font("Monospaced",Font.PLAIN,50));
-
         north_panel = new JPanel();
         west_panel = new JPanel();
         central_panel = new JPanel();
@@ -93,7 +87,7 @@ public class GUI implements ActionListener {
         north_panel.setPreferredSize(new Dimension(100,100));
 
         north_panel.add(title);
-        central_panel.add(board);
+        //central_panel.add(board);
 
         easy = new JRadioButton("Easy");
         easy.addActionListener(this);
@@ -134,6 +128,28 @@ public class GUI implements ActionListener {
         generate_button.addActionListener(this);
         west_panel.add(generate_button);
 
+        central_panel.setLayout(new GridLayout(5,5)); //wyswietlanie na razie tylko dla 5x5
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton();
+            buttons[i].setBackground(Color.white);
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 40));
+            int finalI = i;
+            buttons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (buttons[finalI].getBackground() == Color.white) {
+                        buttons[finalI].setBackground(Color.black);
+                    } else{
+                        buttons[finalI].setBackground(Color.white);
+                    }
+                    al.board.changeColor(finalI);
+                }
+            });
+            central_panel.add(buttons[i]);
+        }
+        setButtons();
+
+
         frame.setVisible(true);
     }
     //public static void test(String[] args){
@@ -166,11 +182,12 @@ public class GUI implements ActionListener {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
                     al.generator.generateFromText(file.toString());
+                    al.board.updateBoard(al.generator.getBoard());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                System.out.println("Wczytano "+ file);
-                update();
+                    System.out.println("Wczytano " + file);
+                    setButtons();
             }
         }
         if(e.getSource()==save_button){
@@ -198,8 +215,17 @@ public class GUI implements ActionListener {
         } else if(e.getSource()==generate_button && getDiff() == -1) {
             System.out.println("Wybierz trudność");
         }
-
     }
 
-    public void update(){board.setText(al.board.toString());} //placeholder do łatwiejszego testowania
+    private void setButtons(){
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setText(String.valueOf(al.generator.getValueFromBoard(i)));
+            if(al.generator.getColorFromBoard(i)) {
+                buttons[i].setBackground(Color.black);
+            }else{
+                buttons[i].setBackground(Color.white);
+            }
+        }
+    }
+
 }

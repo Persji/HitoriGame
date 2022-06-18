@@ -36,8 +36,8 @@ public class Board {
     }
 
     public void changeColor(int xy){
-        userBoard.add(xy,new Values(userBoard.get(xy).getValue(),
-                !(userBoard.get(xy).getColor())));
+        userBoard.add(xy,new Values(userBoard.get(xy).getValue(), !(userBoard.get(xy).getColor())));
+        userBoard.remove(xy+1);
     }
     public int getValueFromBoard(int coordinates) { //skopiowane z generator
 
@@ -62,7 +62,7 @@ public class Board {
     }
 
     @Override
-    public String toString(){ //zwraca same wartości planszy, jeszcze bez koloru
+    public String toString(){ //zwraca same wartości planszy
         String rtn = "";
         for (int j = 0; j <Math.sqrt(size) ; j++) {
             for (int i = 0; i < Math.sqrt(size); i++) {
