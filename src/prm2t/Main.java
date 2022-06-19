@@ -28,12 +28,8 @@ public class Main implements ActionListener {
                 main.generator.generateRandom(0);
 
                 main.board = new Board(main.generator.getBoard());
-
                 main.saver = new Saver(main.board, main.generator);
-                main.saver.saveBoard("resources/savedBoard.txt");
-
                 main.solver = new Solver(main.board);
-                //main.solver.checkIfBoardIsCorrect();
 
                 main.initGUI();
                 GUI gui = main.getGui();

@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Generator {
 
-    private int dificulty = 0;
     private final ArrayList<Values> board = new ArrayList<Values>();
 
     public List<Values> getBoard(){return board;}
@@ -70,7 +69,7 @@ public class Generator {
         int blackSize = 0;
         if(dificulty==0) {
             boardSize = 25;
-            blackSize = getRandomNumber(7, 7);
+            blackSize = getRandomNumber(8, 8);
         }
         if(dificulty==1) {
             boardSize = 36;

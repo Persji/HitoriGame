@@ -85,7 +85,7 @@ public class GUI implements ActionListener {
         frame.pack();
 
 
-        north_panel.setBackground(Color.GRAY);
+        north_panel.setBackground(Color.WHITE);
         north_panel.setPreferredSize(new Dimension(100, 100));
         west_panel.setBackground(Color.darkGray);
         west_panel.setPreferredSize(new Dimension(100,100));
@@ -245,7 +245,7 @@ public class GUI implements ActionListener {
         }
         if(e.getSource()==generate_button && getDiff() != -1){
             this.rdy = true;
-            al.generator.generateRandom(0);
+            al.generator.generateRandom(getDiff());
             al.board.updateBoard(al.generator.getBoard());
             setButtons();
         } else if(e.getSource()==generate_button && getDiff() == -1) {
