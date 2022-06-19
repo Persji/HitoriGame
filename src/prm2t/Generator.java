@@ -107,8 +107,8 @@ public class Generator {
                 result1 = checkNextBlack(boardWidth, blackCoordinates);
                 result2 = checkNextWhite(whiteCoordinates, boardWidth);
             } while(!result1 || !result2);
-        //System.out.println(blackCoordinates);
-        //System.out.println(whiteCoordinates);
+        System.out.println(blackCoordinates);
+        System.out.println(whiteCoordinates);
 
             /* wpisywanie czarnych i bialych pol do boarda */
             for(int i=0; i<boardSize; ++i) {
@@ -120,30 +120,15 @@ public class Generator {
                 }
             }
 
-            /* wpisywanie liczb do bialych pol */
-            for(int i=0; i<boardSize; ++i){
 
-                if(!getColorFromBoard(i)) {
-                    int random = getRandomNumber(1,boardWidth);
-                    board.set(i,new Values(random, false));
-                }
-                if(checkIfColValueExist(i, boardWidth) && !getColorFromBoard(i) && checkIfRowValueExist(i, boardWidth)){
-                    //System.out.println(i+ " " + getValueFromBoard(i));
-                }
-                else if(getColorFromBoard(i)){
-                    board.set(i,new Values(-1, true));
-                }
-                else {
-                    //for(int j=0; j<boardSize; ++j) {
-                       // System.out.println(i+ " " + getValueFromBoard(j));
-                    //}
-                    //System.out.println(i+ " " + getValueFromBoard(i));
-                    int random1 = getRandomNumber(1,boardWidth);
-                    //System.out.println(i+ " " +random1 + " ");
-                    board.set(i,new Values(random1, false));
-                    --i;
-                }
-            }
+            /* wpisywanie liczb do bialych pol */
+            boolean whiteResult = false;
+            do {
+                whiteResult=fillWhiteArea(boardSize,boardWidth);
+                System.out.println("próba generacji planszy");
+            }while(!whiteResult);
+
+            System.out.println("po uzupelnieniu bialych");
             /* wpisywanie liczb do czarnych pol */
             for(int i=0; i<boardSize; ++i) {
                 if(getValueFromBoard(i) == -1) {
@@ -157,9 +142,42 @@ public class Generator {
                     }
                 }
             }
+            System.out.println("po uzupelniniu czarnych");
             clearColors();
 
         }
+    /* zwraca true jak poprawna oraz false jak niepoprawna */
+    private boolean fillWhiteArea(int boardSize, int boardWidth) {
+        int counter = 0;
+        for(int i=0; i<boardSize; ++i){
+
+            if(!getColorFromBoard(i)) {
+                int random = getRandomNumber(1,boardWidth);
+                board.set(i,new Values(random, false));
+            }
+            if(checkIfColValueExist(i, boardWidth) && !getColorFromBoard(i) && checkIfRowValueExist(i, boardWidth)){
+                //System.out.println(i+ " " + getValueFromBoard(i));
+            }
+            else if(getColorFromBoard(i)){
+                board.set(i,new Values(-1, true));
+            }
+            else {
+                ++counter;
+                if(counter == 100) {
+                    return false;
+                }
+                //for(int j=0; j<boardSize; ++j) {
+                // System.out.println(i+ " " + getValueFromBoard(j));
+                //}
+                //System.out.println(i+ " " + getValueFromBoard(i));
+                int random1 = getRandomNumber(1,boardWidth);
+                //System.out.println(i+ " " +random1 + " ");
+                board.set(i,new Values(random1, false));
+                --i;
+            }
+        }
+        return true;
+    }
 
     /* funkcja zwraca true jezeli nie wystąpiła dana liczba w rzedzie */
     private boolean checkIfRowValueExist(int coordinates, int boardWidth){

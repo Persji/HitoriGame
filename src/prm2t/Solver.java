@@ -24,70 +24,91 @@ public class Solver {
                 whiteCoordinates.add(i);
             }
         }
-        System.out.println(blackCoordinates);
-        System.out.println(whiteCoordinates);
-
+//        System.out.println(blackCoordinates);
+//        System.out.println(whiteCoordinates);
+//        System.out.println("czarne " +checkNextBlack(board.getSize(),blackCoordinates));
+//        System.out.println("biale " +checkNextWhite(whiteCoordinates,boardWidth));
+//        System.out.println("rzad " +checkIfRowValueExist(boardWidth));
+//        System.out.println("kol " + checkIfColValueExist(boardWidth));
 
         if(checkNextBlack(board.getSize(),blackCoordinates)
-        && checkNextWhite(whiteCoordinates,boardWidth)){
+        && checkNextWhite(whiteCoordinates,boardWidth)
+        && checkIfRowValueExist(boardWidth)
+        && checkIfColValueExist(boardWidth)){
 
-            System.out.println("git");
+            System.out.println("wszystkie warunki poprawne");
             return true;
         }
         System.out.println("blad");
         return false;
     }
 
-    private boolean checkIfRowValueExist(int coordinates, int boardWidth){
-        if(coordinates%boardWidth == 0) {
-            for(int i=1; i<boardWidth; ++i) {
-                if(board.getValueFromBoard(coordinates) == board.getValueFromBoard(coordinates+i) && board.getValueFromBoard(coordinates+i) != -1) {
-                    //System.out.println("blad lewo" + " " + getValueFromBoard(coordinates));
-                    return false;
+    private boolean checkIfRowValueExist(int boardWidth){
+        for(int j=0; j<board.getSize(); ++j) {
+            if(j%boardWidth == 0) {
+                for(int i=1; i<boardWidth; ++i) {
+                    if(board.getValueFromBoard(j) == board.getValueFromBoard(j+i)
+                            && board.getColorFromBoard(j+i) != true
+                            && board.getColorFromBoard(j) != true) {
+                        //System.out.println("blad lewo " + j + " " + board.getValueFromBoard(j));
+                        return false;
+                    }
                 }
             }
-        }
-        else if(coordinates%boardWidth == boardWidth-1) {
-            for(int i=1; i<boardWidth; ++i) {
-                if(board.getValueFromBoard(coordinates) == board.getValueFromBoard(coordinates-i) && board.getValueFromBoard(coordinates-i) != -1) {
-                    //System.out.println("blad prawo" + " " + getValueFromBoard(coordinates));
-                    return false;
+            else if(j%boardWidth == boardWidth-1) {
+                for(int i=1; i<boardWidth; ++i) {
+                    if(board.getValueFromBoard(j) == board.getValueFromBoard(j-i)
+                            && board.getColorFromBoard(j-i) != true
+                            && board.getColorFromBoard(j) != true) {
+                        //System.out.println("blad prawo " + j + " " + board.getValueFromBoard(j));
+                        return false;
+                    }
                 }
             }
-        }
-        else {
-            int left = coordinates%boardWidth;
-            int right = boardWidth - left - 1;
-            for(int i=1; i<=left; ++i) {
-                if(board.getValueFromBoard(coordinates) == board.getValueFromBoard(coordinates-i) && board.getValueFromBoard(coordinates-i) != -1) {
-                    //System.out.println("blad w lewo srodek" + " " + getValueFromBoard(coordinates));
-                    return false;
+            else {
+                int left = j%boardWidth;
+                int right = boardWidth - left - 1;
+                for(int i=1; i<=left; ++i) {
+                    if(board.getValueFromBoard(j) == board.getValueFromBoard(j-i)
+                            && board.getColorFromBoard(j-i) != true
+                            && board.getColorFromBoard(j) != true) {
+                        //System.out.println("blad w lewo srodek " + j + " " + board.getValueFromBoard(j));
+                        return false;
+                    }
                 }
-            }
-            for(int i=1; i<=right; ++i) {
-                if(board.getValueFromBoard(coordinates) == board.getValueFromBoard(coordinates+i) && board.getValueFromBoard(coordinates+i) != -1) {
-                    //System.out.println("blad w prawo srodek" + " " + getValueFromBoard(coordinates));
-                    return false;
+                for(int i=1; i<=right; ++i) {
+                    if(board.getValueFromBoard(j) == board.getValueFromBoard(j+i)
+                            && board.getColorFromBoard(j+i) != true
+                            && board.getColorFromBoard(j) != true) {
+                        //System.out.println("blad w prawo srodek " + j + " " + board.getValueFromBoard(j));
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
     /* funkcja zwraca true jezeli nie wystąpiła dana liczba w kolumnie */
-    private boolean checkIfColValueExist(int coordinates, int boardWidth){
-        int mod = coordinates%boardWidth;
-        for(int i=0; i<board.getSize(); ++i) {
-            if(mod == i%boardWidth && board.getValueFromBoard(coordinates) == board.getValueFromBoard(i) && board.getValueFromBoard(coordinates) != -1 && i!=coordinates) {
-                //System.out.println("blad kol" + " " + getValueFromBoard(coordinates));
-                return false;
+    private boolean checkIfColValueExist(int boardWidth){
+        for(int j=0; j<board.getSize(); ++j) {
+            int mod = j%boardWidth;
+            for(int i=0; i<board.getSize(); ++i) {
+                if(mod == i%boardWidth && board.getValueFromBoard(j) == board.getValueFromBoard(i)
+                        && board.getColorFromBoard(j) != true
+                        && board.getColorFromBoard(i) != true
+                        && i!=j) {
+                    //System.out.println("blad kol " + j + " " + board.getValueFromBoard(j));
+                    return false;
+                }
             }
         }
         return true;
     }
     /* jeżeli true, plansza poprawna */
     private boolean checkNextBlack(int boardsize, ArrayList<Integer> blackCoordinates) {
-        for(int i=0; i< blackCoordinates.size(); ++i) {;
-            if(!isThereBlackArea(boardsize, blackCoordinates.get(i), blackCoordinates)) {
+        int boardWidth = (int)Math.sqrt(board.getSize());
+        for(int i=0; i<blackCoordinates.size(); ++i) {;
+            if(!isThereBlackArea(boardWidth, blackCoordinates.get(i), blackCoordinates)) {
                 return false;
             }
         }

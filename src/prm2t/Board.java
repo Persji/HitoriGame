@@ -50,6 +50,7 @@ public class Board {
         }
     }
 
+
     public boolean getColorFromBoard(int coordinates) { //skopiowane z generatora
 
         Values v = userBoard.get(coordinates);
