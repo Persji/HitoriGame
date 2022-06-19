@@ -1,13 +1,19 @@
 package prm2t;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 public class GUI implements ActionListener {
 
+    private Main al;
     private JFrame frame;
     private JLabel title;
     private JPanel north_panel;
@@ -22,9 +28,12 @@ public class GUI implements ActionListener {
     private JRadioButton normal;
     private JRadioButton hard;
     private ButtonGroup difficulty;
-    private JLabel board;
+    private JButton[] buttons;
+    private JDialog resultWindow;
+    private JLabel resultLabel;
 
     private Dificulty diff = Dificulty.NONE;
+
 
     private boolean rdy=false;
 
@@ -49,22 +58,16 @@ public class GUI implements ActionListener {
 
 
 
-    public GUI(){
+    public GUI(Main main){
 
         //frame - okno GUI
         // panel - główny 'widok' GUI
-
+        al = main;
         title = new JLabel();
         title.setText("HITORI");
         title.setHorizontalTextPosition(JLabel.CENTER);
         title.setVerticalTextPosition(JLabel.CENTER);
         title.setFont(new Font("Monospaced",Font.PLAIN,50));
-
-        board = new JLabel();
-        board.setText("Miejsce na plansze");
-        board.setHorizontalTextPosition(JLabel.CENTER);
-        board.setVerticalTextPosition(JLabel.CENTER);
-        board.setFont(new Font("Monospaced",Font.PLAIN,50));
 
         north_panel = new JPanel();
         west_panel = new JPanel();
@@ -72,6 +75,7 @@ public class GUI implements ActionListener {
 
         frame = new JFrame();
         frame.setPreferredSize(new Dimension(1000, 800));
+        frame.setLocation(400,100);
         frame.setLayout(new BorderLayout(5,5));
         frame.add(central_panel,BorderLayout.CENTER);
         frame.add(west_panel,BorderLayout.WEST);
@@ -81,7 +85,7 @@ public class GUI implements ActionListener {
         frame.pack();
 
 
-        north_panel.setBackground(Color.GRAY);
+        north_panel.setBackground(Color.WHITE);
         north_panel.setPreferredSize(new Dimension(100, 100));
         west_panel.setBackground(Color.darkGray);
         west_panel.setPreferredSize(new Dimension(100,100));
@@ -89,7 +93,7 @@ public class GUI implements ActionListener {
         north_panel.setPreferredSize(new Dimension(100,100));
 
         north_panel.add(title);
-        central_panel.add(board);
+        //central_panel.add(board);
 
         easy = new JRadioButton("Easy");
         easy.addActionListener(this);
@@ -130,10 +134,59 @@ public class GUI implements ActionListener {
         generate_button.addActionListener(this);
         west_panel.add(generate_button);
 
+        //okienko wygranej
+
+        resultWindow = new JDialog(frame);
+        resultWindow.setLayout(new FlowLayout());
+        JButton okButton = new JButton("ok");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultWindow.setVisible(false);
+            }
+        });
+        resultLabel = new JLabel("");
+        resultWindow.add(resultLabel);
+        resultWindow.add(okButton);
+        resultWindow.setSize(250,100);
+        resultWindow.setLocation(775,450);
+
+        //plansza
+
+        buttons = new JButton[al.board.getSize()];
+        central_panel.setLayout(new GridLayout((int) Math.sqrt(buttons.length),(int) Math.sqrt(buttons.length)));
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton();
+            buttons[i].setBackground(Color.gray);
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 40));
+            buttons[i].setForeground(Color.black);
+            buttons[i].setFocusPainted(false);
+            int finalI = i;
+            buttons[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if(e.getButton() == MouseEvent.BUTTON1) {
+                        if (buttons[finalI].getBackground() == Color.white || buttons[finalI].getBackground() == Color.gray) {
+                            buttons[finalI].setBackground(Color.black);
+                        } else {
+                            buttons[finalI].setBackground(Color.gray);
+                        }
+                        al.board.changeColor(finalI);
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        if(buttons[finalI].getBackground() == Color.white) {
+                            buttons[finalI].setBackground(Color.gray);
+                        } else{
+                            buttons[finalI].setBackground(Color.white);
+                        }
+                    }
+                }
+            });
+            central_panel.add(buttons[i]);
+        }
+        setButtons();
+
+
         frame.setVisible(true);
-    }
-    public static void test(String[] args){
-        new GUI();
     }
 
     //akcje przycisków
@@ -153,29 +206,70 @@ public class GUI implements ActionListener {
         }
         if(e.getSource()==load_button){
             JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+            fileChooser.setFileFilter(filter);
 
             int response = fileChooser.showOpenDialog(null); //wybiera plik do otwarcia/wczytania do gry
 
             if(response == JFileChooser.APPROVE_OPTION){
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                System.out.println(file);
+                try {
+                    al.generator.generateFromText(file.toString());
+                    al.board.updateBoard(al.generator.getBoard());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                    System.out.println("Wczytano " + file);
+                    setButtons();
             }
         }
         if(e.getSource()==save_button){
             JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+            fileChooser.setFileFilter(filter);
 
             int response = fileChooser.showSaveDialog(null); //wybiera plik do zapisu gry
 
             if(response == JFileChooser.APPROVE_OPTION){
-                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                System.out.println(file);
+                String file = new File(fileChooser.getSelectedFile().getAbsolutePath()).toString();
+                String[] fileSplit = file.split("\\.");
+
+                if(fileSplit.length == 1 || !Objects.equals(fileSplit[fileSplit.length - 1], "txt")){  //jesli plik nie ma lub ma złe rozszerzenie dodaj rozszerzenie .txt
+                    file += ".txt";
+                }
+                if(!file.equals("")){
+                    al.saver.saveBoard(file);
+                    System.out.println("Zapisano do " + file);
+                }
             }
         }
         if(e.getSource()==generate_button && getDiff() != -1){
             this.rdy = true;
+            al.generator.generateRandom(getDiff());
+            al.board.updateBoard(al.generator.getBoard());
+            setButtons();
         } else if(e.getSource()==generate_button && getDiff() == -1) {
             System.out.println("Wybierz trudność");
         }
-
+        if(e.getSource()==solve_button){
+            if(al.solver.checkIfBoardIsCorrect()) {
+            resultLabel.setText("Rozwiązanie poprawne. Gratulacje!");
+            } else {
+                resultLabel.setText("Rozwiązanie niepoprawne. Próbuj dalej");
+            }
+            resultWindow.setVisible(true);
+        }
     }
+
+    private void setButtons(){
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setText(String.valueOf(al.generator.getValueFromBoard(i)));
+            if(al.generator.getColorFromBoard(i)) {
+                buttons[i].setBackground(Color.black);
+            }else{
+                buttons[i].setBackground(Color.gray);
+            }
+        }
+    }
+
 }

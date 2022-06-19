@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Generator {
 
-    private int dificulty = 0;
     private final ArrayList<Values> board = new ArrayList<Values>();
 
     public List<Values> getBoard(){return board;}
@@ -64,12 +63,13 @@ public class Generator {
         }
     }
     /* funkcja generujaca losowa plansze na podstawie wbranego przez uzytkownika poziomu trudnosci */
-     void generateRandom(int dificulty) {
+    public void generateRandom(int dificulty) {
+        board.clear();
         int boardSize = 0;
         int blackSize = 0;
         if(dificulty==0) {
             boardSize = 25;
-            blackSize = getRandomNumber(7, 7);
+            blackSize = getRandomNumber(8, 8);
         }
         if(dificulty==1) {
             boardSize = 36;
@@ -119,13 +119,31 @@ public class Generator {
                     board.add(i, new Values(-1,true));
                 }
             }
-            /* wpisywanie liczb do bialych pol */
-            boolean result = false;
-            do {
-                result = fillWhiteArea(boardSize,boardWidth);
-                System.out.println("ponowna próba wypełnienia liczb");
-            }while(!result);
 
+            /* wpisywanie liczb do bialych pol */
+            for(int i=0; i<boardSize; ++i){
+
+                if(!getColorFromBoard(i)) {
+                    int random = getRandomNumber(1,boardWidth);
+                    board.set(i,new Values(random, false));
+                }
+                if(checkIfColValueExist(i, boardWidth) && !getColorFromBoard(i) && checkIfRowValueExist(i, boardWidth)){
+                    //System.out.println(i+ " " + getValueFromBoard(i));
+                }
+                else if(getColorFromBoard(i)){
+                    board.set(i,new Values(-1, true));
+                }
+                else {
+                    //for(int j=0; j<boardSize; ++j) {
+                       // System.out.println(i+ " " + getValueFromBoard(j));
+                    //}
+                    //System.out.println(i+ " " + getValueFromBoard(i));
+                    int random1 = getRandomNumber(1,boardWidth);
+                    //System.out.println(i+ " " +random1 + " ");
+                    board.set(i,new Values(random1, false));
+                    --i;
+                }
+            }
             /* wpisywanie liczb do czarnych pol */
             for(int i=0; i<boardSize; ++i) {
                 if(getValueFromBoard(i) == -1) {
@@ -139,33 +157,9 @@ public class Generator {
                     }
                 }
             }
-         System.out.println("wygenerowano poprawnie plansze");
+            clearColors();
+
         }
-    private boolean fillWhiteArea (int boardSize, int boardWidth) {
-        int counter = 0;
-        for(int i=0; i<boardSize; ++i){
-            if(!getColorFromBoard(i)) {
-                int random = getRandomNumber(1,boardWidth);
-                board.set(i,new Values(random, false));
-            }
-            if(checkIfColValueExist(i, boardWidth) && !getColorFromBoard(i) && checkIfRowValueExist(i, boardWidth)){
-                //System.out.println(i+ " " + getValueFromBoard(i));
-            }
-            else if(getColorFromBoard(i)){
-                board.set(i,new Values(-1, true));
-            }
-            else {
-                int random1 = getRandomNumber(1,boardWidth);
-                if(counter == 100) {
-                    return false;
-                }
-                ++counter;
-                board.set(i,new Values(random1, false));
-                --i;
-            }
-        }
-         return true;
-    }
 
     /* funkcja zwraca true jezeli nie wystąpiła dana liczba w rzedzie */
     private boolean checkIfRowValueExist(int coordinates, int boardWidth){
@@ -292,6 +286,12 @@ public class Generator {
             return true;
         }
         return false;
+    }
+
+    private void clearColors(){
+        for (int i = 0; i < board.size(); i++) {
+            board.set(i,new Values(board.get(i).getValue(), false));
+        }
     }
 
     private int getRandomNumber(int min, int max) {

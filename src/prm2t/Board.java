@@ -36,7 +36,40 @@ public class Board {
     }
 
     public void changeColor(int xy){
-        userBoard.add(xy,new Values(userBoard.get(xy).getValue(),
-                !(userBoard.get(xy).getColor())));
+        userBoard.add(xy,new Values(userBoard.get(xy).getValue(), !(userBoard.get(xy).getColor())));
+        userBoard.remove(xy+1);
+    }
+    public int getValueFromBoard(int coordinates) { //skopiowane z generator
+
+        Values v = userBoard.get(coordinates);
+        if(v != null) {
+            return v.getValue();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return -1;
+        }
+    }
+
+    public boolean getColorFromBoard(int coordinates) { //skopiowane z generatora
+
+        Values v = userBoard.get(coordinates);
+        if(v != null) {
+            return v.getColor();
+        } else {
+            System.out.println("Podane koordynaty wykraczają poza plansze");
+            return false;
+        }
+    }
+
+    @Override
+    public String toString(){ //zwraca same wartości planszy
+        String rtn = "";
+        for (int j = 0; j <Math.sqrt(size) ; j++) {
+            for (int i = 0; i < Math.sqrt(size); i++) {
+                rtn += getValueFromBoard((int) (j*Math.sqrt(size)+ i)) + " ";
+            }
+            rtn += "\n";
+        }
+        return rtn;
     }
 }
