@@ -23,6 +23,7 @@ public class GUI implements ActionListener {
     private JButton load_button;
     private JButton solve_button;
     private JButton back_button;
+    private JButton clear_button;
 
     private JButton generate_button;
     private JRadioButton easy;
@@ -141,6 +142,10 @@ public class GUI implements ActionListener {
         back_button = new JButton("Undo");
         back_button.addActionListener(this);
         west_panel.add(back_button);
+
+        clear_button = new JButton("Clear");
+        clear_button.addActionListener(this);
+        west_panel.add(clear_button);
 
         //okienko wygranej
 
@@ -297,7 +302,14 @@ public class GUI implements ActionListener {
                 buttons[lastIndex].setBackground(Color.black);
                 System.out.println("test3");
             }
-
+        }
+        if(e.getSource() == clear_button){
+            for (int i = 0; i < buttons.length; i++) {
+                if(buttons[i].getBackground() == Color.black){
+                    al.board.changeColor(i);
+                }
+                buttons[i].setBackground(Color.gray);
+            }
         }
     }
 
