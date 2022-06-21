@@ -15,7 +15,7 @@ public class Saver {
         this.board = board;
         this.generator = generator; //do usuniecia kiedy w Board beda odpowiednie metody
     }
-
+    /** zapisuje aktualną planszę do pliku txt.*/
     public void saveBoard(String directory){
         String text = "";
         int size = (int) Math.sqrt(board.getSize());

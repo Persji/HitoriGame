@@ -22,6 +22,7 @@ public class GUI implements ActionListener {
     private JButton save_button;
     private JButton load_button;
     private JButton solve_button;
+    private JButton back_button;
 
     private JButton generate_button;
     private JRadioButton easy;
@@ -33,6 +34,9 @@ public class GUI implements ActionListener {
     private JLabel resultLabel;
 
     private Dificulty diff = Dificulty.NONE;
+
+    private int lastIndex;
+    private int lastColor; //0-bialy, 1-szary, 2-czarny
 
 
     private boolean rdy=false;
@@ -134,6 +138,10 @@ public class GUI implements ActionListener {
         generate_button.addActionListener(this);
         west_panel.add(generate_button);
 
+        back_button = new JButton("Undo");
+        back_button.addActionListener(this);
+        west_panel.add(back_button);
+
         //okienko wygranej
 
         resultWindow = new JDialog(frame);
@@ -166,19 +174,30 @@ public class GUI implements ActionListener {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if(e.getButton() == MouseEvent.BUTTON1) {
-                        if (buttons[finalI].getBackground() == Color.white || buttons[finalI].getBackground() == Color.gray) {
+                        if (buttons[finalI].getBackground() == Color.gray) {
                             buttons[finalI].setBackground(Color.black);
-                        } else {
+                            lastColor = 1;
+                        } else if(buttons[finalI].getBackground() == Color.white ){
+                            buttons[finalI].setBackground(Color.black);
+                            lastColor = 0;
+                        }
+                        else {
                             buttons[finalI].setBackground(Color.gray);
+                            lastColor = 2;
                         }
                         al.board.changeColor(finalI);
                     } else if (e.getButton() == MouseEvent.BUTTON3) {
                         if(buttons[finalI].getBackground() == Color.white) {
                             buttons[finalI].setBackground(Color.gray);
+                            lastColor = 0;
                         } else{
+                            if(buttons[finalI].getBackground() == Color.gray){lastColor = 1;}
+                            else {lastColor = 2;}
                             buttons[finalI].setBackground(Color.white);
+
                         }
                     }
+                    lastIndex = finalI;
                 }
             });
             central_panel.add(buttons[i]);
@@ -258,6 +277,27 @@ public class GUI implements ActionListener {
                 resultLabel.setText("Rozwiązanie niepoprawne. Próbuj dalej");
             }
             resultWindow.setVisible(true);
+        }
+        if(e.getSource() == back_button){
+            if(lastColor == 0){
+                if(buttons[lastIndex].getBackground() == Color.black){
+                    al.board.changeColor(lastIndex);
+                }
+                buttons[lastIndex].setBackground(Color.white);
+                System.out.println("test1");
+            }else
+            if(lastColor == 1){
+                if(buttons[lastIndex].getBackground() == Color.black){
+                    al.board.changeColor(lastIndex);
+                }
+                buttons[lastIndex].setBackground(Color.gray);
+                System.out.println("test2");
+            }else {
+                al.board.changeColor(lastIndex);
+                buttons[lastIndex].setBackground(Color.black);
+                System.out.println("test3");
+            }
+
         }
     }
 
